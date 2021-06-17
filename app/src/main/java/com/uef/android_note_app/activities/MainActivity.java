@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +57,26 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         notesRecyclerView.setAdapter(notesAdapter);
 
         getNotes(REQUEST_CODE_SHOW_NOTES, false);
+
+        EditText inputSearch = findViewById(R.id.inputSearch);
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                notesAdapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (noteList.size() != 0) {
+                    notesAdapter.searchNotes(s.toString());
+                }
+            }
+        });
     }
 
     @Override
@@ -81,19 +104,19 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
-                if (requestCode == REQUEST_CODE_SHOW_NOTES){
+                if (requestCode == REQUEST_CODE_SHOW_NOTES) {
                     noteList.addAll(notes);
                     notesAdapter.notifyDataSetChanged();
-                }else if (requestCode == REQUEST_CODE_ADD_NOTE){
+                } else if (requestCode == REQUEST_CODE_ADD_NOTE) {
                     noteList.add(0, notes.get(0));
                     notesAdapter.notifyItemInserted(0);
                     notesRecyclerView.smoothScrollToPosition(0);
-                }else if (requestCode == REQUEST_CODE_UPDATE_NOTE){
+                } else if (requestCode == REQUEST_CODE_UPDATE_NOTE) {
                     noteList.remove(noteClickedPosition);
 
-                    if (isNoteDeleted){
+                    if (isNoteDeleted) {
                         notesAdapter.notifyItemRemoved(noteClickedPosition);
-                    }else {
+                    } else {
                         noteList.add(noteClickedPosition, notes.get(noteClickedPosition));
                         notesAdapter.notifyItemChanged(noteClickedPosition);
                     }
@@ -110,9 +133,9 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK) {
-            getNotes(REQUEST_CODE_ADD_NOTE,false);
-        }else if (requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK){
-            if (data != null ){
+            getNotes(REQUEST_CODE_ADD_NOTE, false);
+        } else if (requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK) {
+            if (data != null) {
                 getNotes(REQUEST_CODE_UPDATE_NOTE, data.getBooleanExtra("isNoteDeleted", false));
             }
         }

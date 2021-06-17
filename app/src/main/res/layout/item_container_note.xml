@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:visibility="gone"
         app:riv_corner_radius_top_left="@dimen/_10sdp"
-        app:riv_corner_radius_top_right="@dimen/_10sdp"/>
+        app:riv_corner_radius_top_right="@dimen/_10sdp" />
 
     <TextView
         android:id="@+id/textTitle"
@@ -37,7 +37,7 @@
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
         android:textColor="@color/colorNoteSubtitleText"
@@ -53,6 +53,6 @@
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
         android:textColor="@color/colorNoteSubtitleText"
-        android:textSize="@dimen/_7ssp" />
+        android:textSize="@dimen/_8ssp" />
 
 </LinearLayout>
