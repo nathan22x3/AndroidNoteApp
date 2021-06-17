@@ -32,10 +32,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
-        imageAddNoteMain.setOnClickListener(v -> startActivityForResult(
-                new Intent(getApplicationContext(), CreateNoteActivity.class),
-                REQUEST_CODE_ADD_NOTE
-        ));
+        imageAddNoteMain.setOnClickListener((v) -> {
+            startActivityForResult(
+                    new Intent(getApplicationContext(), CreateNoteActivity.class),
+                    REQUEST_CODE_ADD_NOTE
+            );
+        });
 
         notesRecyclerView = findViewById(R.id.notesRecyclerView);
         notesRecyclerView.setLayoutManager(
@@ -49,13 +51,6 @@ public class MainActivity extends AppCompatActivity {
         getNotes();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_ADD_NOTE && requestCode == RESULT_OK)) {
-            getNotes();
-        }
-    }
 
     private void getNotes() {
 
@@ -87,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         new GetNotesTask().execute();
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK) {
+            getNotes();
+        }
+    }
+
 }
