@@ -79,7 +79,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutWebURL = findViewById(R.id.layoutWebURL);
 
         textDateTime.setText(
-                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault())
+                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
                         .format(new Date())
         );
 
@@ -158,11 +158,11 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private void saveNote() {
         if (inputNoteTitle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Note title can't be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tiêu đề không được bỏ trống!", Toast.LENGTH_SHORT).show();
             return;
         } else if (inputNoteSubtitle.getText().toString().trim().isEmpty()
                 && inputNoteText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Note can't be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nội dung không được bỏ trống!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -415,7 +415,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectedImage();
             } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bạn không có quyền truy cập!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -482,9 +482,9 @@ public class CreateNoteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (inputURL.getText().toString().trim().isEmpty()) {
-                        Toast.makeText(CreateNoteActivity.this, "Enter URL", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNoteActivity.this, "Vui lòng nhập đường dẫn!", Toast.LENGTH_SHORT).show();
                     } else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()) {
-                        Toast.makeText(CreateNoteActivity.this, "Enter valid URL", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNoteActivity.this, "Đường dẫn không hợp lệ!", Toast.LENGTH_SHORT).show();
                     } else {
                         textWebURL.setText(inputURL.getText().toString());
                         layoutWebURL.setVisibility(View.VISIBLE);
