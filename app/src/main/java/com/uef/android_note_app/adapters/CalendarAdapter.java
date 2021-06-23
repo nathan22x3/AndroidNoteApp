@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.uef.android_note_app.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -30,9 +31,11 @@ public class CalendarAdapter extends ArrayAdapter<Date> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         Date date = getItem(position);
-        int day = date.getDate();
-        int month = date.getMonth();
-        int year = date.getYear();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR) - 1900;
 
         Date today = new Date();
 
@@ -58,13 +61,13 @@ public class CalendarAdapter extends ArrayAdapter<Date> {
             ((TextView) view).setTextColor(Color.rgb(65, 65, 65));
         } else if (day == today.getDate()) {
             ((TextView) view).setTypeface(null, Typeface.BOLD);
-            ((TextView) view).setTextColor(Color.rgb(255, 204, 51));
+            ((TextView) view).setTextColor(Color.rgb(51, 51, 51));
+            ((TextView) view).setBackgroundResource(R.drawable.rounded_button);
         }
 
         ((TextView) view).setText(String.valueOf(date.getDate()));
 
         return view;
     }
-
 
 }

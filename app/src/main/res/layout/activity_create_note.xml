@@ -13,6 +13,7 @@
         android:layout_marginBottom="@dimen/_40sdp"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_10sdp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,9 +28,9 @@
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_back"
-                app:tint="@color/colorIcons"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorIcons" />
 
             <ImageView
                 android:id="@+id/imageSave"
@@ -62,10 +63,10 @@
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_16sdp"
-                app:layout_constraintTop_toBottomOf="@id/imageBack"/>
+                app:layout_constraintTop_toBottomOf="@id/imageBack" />
 
             <TextView
-                android:id="@+id/textDateTime"
+                android:id="@+id/textCreatedTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -74,7 +75,7 @@
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintEnd_toEndOf="@id/inputNoteTitle"
                 app:layout_constraintStart_toStartOf="@id/inputNoteTitle"
-                app:layout_constraintTop_toBottomOf="@id/inputNoteTitle"/>
+                app:layout_constraintTop_toBottomOf="@id/inputNoteTitle" />
 
             <EditText
                 android:id="@+id/inputNoteSubtitle"
@@ -96,7 +97,7 @@
                 android:textSize="@dimen/_13sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/viewSubtitleIndicator"
-                app:layout_constraintTop_toBottomOf="@id/textDateTime"/>
+                app:layout_constraintTop_toBottomOf="@id/textDateTime" />
 
             <View
                 android:id="@+id/viewSubtitleIndicator"
@@ -106,7 +107,7 @@
                 android:background="@drawable/background_subtitle_indicator"
                 app:layout_constraintBottom_toBottomOf="@id/inputNoteSubtitle"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/inputNoteSubtitle"/>
+                app:layout_constraintTop_toTopOf="@id/inputNoteSubtitle" />
 
             <ImageView
                 android:id="@+id/imageNote"
@@ -118,7 +119,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle"/>
+                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle" />
 
             <ImageView
                 android:id="@+id/imageRemoveImage"
@@ -156,7 +157,7 @@
                     android:autoLink="web"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:textSize="@dimen/_13sdp"/>
+                    android:textSize="@dimen/_13sdp" />
 
                 <ImageView
                     android:id="@+id/imageRemoveWebURL"
@@ -189,15 +190,13 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutWebURL"/>
+                app:layout_constraintTop_toBottomOf="@id/layoutWebURL" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <include layout="@layout/layout_miscellaneous"/>
-
-
+    <include layout="@layout/layout_miscellaneous" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

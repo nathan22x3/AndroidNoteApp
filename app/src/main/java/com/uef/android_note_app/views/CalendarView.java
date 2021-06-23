@@ -1,6 +1,7 @@
 package com.uef.android_note_app.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.uef.android_note_app.adapters.CalendarAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -79,7 +81,16 @@ public class CalendarView extends LinearLayout {
             updateCalendar();
         });
 
-        gridView.setOnItemClickListener((view, cell, position, id) -> Log.d("CURRENT_DAY", String.valueOf(id)));
+        gridView.setOnItemClickListener((view, cell, position, id) -> {
+            Date date = (Date) view.getItemAtPosition(position);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR) - 1900;
+            ((TextView) cell).setTextColor(Color.rgb(255, 204, 51));
+            Log.d("CURRENT_DAY", Arrays.toString(new String[]{String.valueOf(day), String.valueOf(month), String.valueOf(year)}));
+        });
     }
 
     public void updateCalendar() {

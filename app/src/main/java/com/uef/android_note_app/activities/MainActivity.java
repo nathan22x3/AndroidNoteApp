@@ -59,12 +59,10 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         setContentView(R.layout.activity_main);
 
         ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
-        imageAddNoteMain.setOnClickListener((v) -> {
-            startActivityForResult(
-                    new Intent(getApplicationContext(), CreateNoteActivity.class),
-                    REQUEST_CODE_ADD_NOTE
-            );
-        });
+        imageAddNoteMain.setOnClickListener((v) -> startActivityForResult(
+                new Intent(getApplicationContext(), CreateNoteActivity.class),
+                REQUEST_CODE_ADD_NOTE
+        ));
 
         notesRecyclerView = findViewById(R.id.notesRecyclerView);
         notesRecyclerView.setLayoutManager(
@@ -97,59 +95,46 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
         });
 
-        findViewById(R.id.imageAddNote).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(), CreateNoteActivity.class),
-                        REQUEST_CODE_ADD_NOTE
+        findViewById(R.id.imageAddNote).setOnClickListener(v -> startActivityForResult(
+                new Intent(getApplicationContext(), CreateNoteActivity.class),
+                REQUEST_CODE_ADD_NOTE
+        ));
+
+        findViewById(R.id.imageAddImage).setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        MainActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_STORAGE_PERMISSION
                 );
+            } else {
+                selectedImage();
             }
         });
 
-        findViewById(R.id.imageAddImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(
-                            MainActivity.this,
-                            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_STORAGE_PERMISSION
-                    );
-                } else{
-                    selectedImage();
-                }
-            }
-        });
-
-        findViewById(R.id.imageAddWebLink).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddURLDialog();
-            }
-        });
+        findViewById(R.id.imageAddWebLink).setOnClickListener(v -> showAddURLDialog());
 
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectedImage();
-            }else {
-                Toast.makeText(this,"Permission Denied!" , Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private String getPathFromUri(Uri contentUri){
+    private String getPathFromUri(Uri contentUri) {
         String filePath;
         Cursor cursor = getContentResolver()
-                .query(contentUri, null , null , null , null);
-        if(cursor == null){
+                .query(contentUri, null, null, null, null);
+        if (cursor == null) {
             filePath = contentUri.getPath();
-        }else {
+        } else {
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
             filePath = cursor.getString(index);
@@ -159,16 +144,16 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     }
 
 
-    private void selectedImage(){
+    private void selectedImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if(intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
         }
     }
 
     @Override
-    public void onNoteClicked(Note note, int postion) {
-        noteClickedPosition = postion;
+    public void onNoteClicked(Note note, int position) {
+        noteClickedPosition = position;
         Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
         intent.putExtra("isViewOrUpdate", true);
         intent.putExtra("note", note);
@@ -225,27 +210,27 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             if (data != null) {
                 getNotes(REQUEST_CODE_UPDATE_NOTE, data.getBooleanExtra("isNoteDeleted", false));
             }
-        }else if(requestCode == REQUEST_CODE_SELECT_IMAGE && requestCode ==RESULT_OK){
-            if(data != null){
+        } else if (requestCode == REQUEST_CODE_SELECT_IMAGE && requestCode == RESULT_OK) {
+            if (data != null) {
                 Uri selectedImageUri = data.getData();
-                if(selectedImageUri != null){
-                    try{
+                if (selectedImageUri != null) {
+                    try {
                         String selectedImagePath = getPathFromUri(selectedImageUri);
-                        Intent intent = new Intent(getApplicationContext() , CreateNoteActivity.class);
-                        intent.putExtra("isFromQuickActions" , true);
-                        intent.putExtra("quickActionType" , "image");
-                        intent.putExtra("imagePath" , selectedImagePath);
-                        startActivityForResult(intent , REQUEST_CODE_ADD_NOTE);
-                    }catch (Exception exception){
-                        Toast.makeText(this, exception.getMessage() , Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+                        intent.putExtra("isFromQuickActions", true);
+                        intent.putExtra("quickActionType", "image");
+                        intent.putExtra("imagePath", selectedImagePath);
+                        startActivityForResult(intent, REQUEST_CODE_ADD_NOTE);
+                    } catch (Exception exception) {
+                        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         }
     }
 
-    private void showAddURLDialog(){
-        if(dialogAddURL == null){
+    private void showAddURLDialog() {
+        if (dialogAddURL == null) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_add_url,
@@ -254,37 +239,29 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             builder.setView(view);
 
             dialogAddURL = builder.create();
-            if (dialogAddURL.getWindow() != null){
+            if (dialogAddURL.getWindow() != null) {
                 dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
 
             final EditText inputURL = view.findViewById(R.id.inputURL);
             inputURL.requestFocus();
 
-            view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (inputURL.getText().toString().trim().isEmpty()){
-                        Toast.makeText(MainActivity.this, "Enter URL", Toast.LENGTH_SHORT).show();
-                    }else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()){
-                        Toast.makeText(MainActivity.this, "Enter valid URL", Toast.LENGTH_SHORT).show();
-                    }else {
-                        dialogAddURL.dismiss();
-                        Intent intent = new Intent(getApplicationContext() , CreateNoteActivity.class);
-                        intent.putExtra("isFromQuickActions" , true);
-                        intent.putExtra("quickActionType" , "URL");
-                        intent.putExtra("URL" , inputURL.getText().toString());
-                        startActivityForResult(intent , REQUEST_CODE_ADD_NOTE);
-                    }
+            view.findViewById(R.id.textAdd).setOnClickListener(v -> {
+                if (inputURL.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Enter URL", Toast.LENGTH_SHORT).show();
+                } else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()) {
+                    Toast.makeText(MainActivity.this, "Enter valid URL", Toast.LENGTH_SHORT).show();
+                } else {
+                    dialogAddURL.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+                    intent.putExtra("isFromQuickActions", true);
+                    intent.putExtra("quickActionType", "URL");
+                    intent.putExtra("URL", inputURL.getText().toString());
+                    startActivityForResult(intent, REQUEST_CODE_ADD_NOTE);
                 }
             });
 
-            view.findViewById(R.id.textCancel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialogAddURL.dismiss();
-                }
-            });
+            view.findViewById(R.id.textCancel).setOnClickListener(v -> dialogAddURL.dismiss());
         }
         dialogAddURL.show();
 
