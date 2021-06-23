@@ -92,7 +92,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             } else {
                 textSubtitle.setText(note.getSubtitle());
             }
-            textDateTime.setText(note.getDateTime());
+            textDateTime.setText(note.getCreatedTime());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
             if (note.getColor() != null) {

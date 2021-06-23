@@ -44,7 +44,7 @@ import java.util.Locale;
 public class CreateNoteActivity extends AppCompatActivity {
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
-    private TextView textDateTime;
+    private TextView textCreatedTime;
     private View viewSubtitleIndicator;
     private ImageView imageNote;
     private TextView textWebURL;
@@ -72,14 +72,14 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteTitle = findViewById(R.id.inputNoteTitle);
         inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
         inputNoteText = findViewById(R.id.inputNote);
-        textDateTime = findViewById(R.id.textDateTime);
+        textCreatedTime = findViewById(R.id.textDateTime);
         viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
         imageNote = findViewById(R.id.imageNote);
         textWebURL = findViewById(R.id.textWebURL);
         layoutWebURL = findViewById(R.id.layoutWebURL);
 
-        textDateTime.setText(
-                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault())
+        textCreatedTime.setText(
+                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
                         .format(new Date())
         );
 
@@ -141,7 +141,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteTitle.setText(alreadyAvailableNote.getTitle());
         inputNoteSubtitle.setText(alreadyAvailableNote.getSubtitle());
         inputNoteText.setText(alreadyAvailableNote.getNoteText());
-        textDateTime.setText(alreadyAvailableNote.getDateTime());
+        textCreatedTime.setText(alreadyAvailableNote.getCreatedTime());
 
         if (alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
@@ -158,11 +158,11 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private void saveNote() {
         if (inputNoteTitle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Note title can't be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tiêu đề không được bỏ trống!", Toast.LENGTH_SHORT).show();
             return;
         } else if (inputNoteSubtitle.getText().toString().trim().isEmpty()
                 && inputNoteText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Note can't be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nội dung không được bỏ trống!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -170,7 +170,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setTitle(inputNoteTitle.getText().toString());
         note.setSubtitle(inputNoteSubtitle.getText().toString());
         note.setNoteText(inputNoteText.getText().toString());
-        note.setDateTime(textDateTime.getText().toString());
+        note.setCreatedTime(textCreatedTime.getText().toString());
         note.setColor(selectedNoteColor);
         note.setImagePath(selectedImagePath);
 
@@ -415,7 +415,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectedImage();
             } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bạn không có quyền truy cập!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -482,9 +482,9 @@ public class CreateNoteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (inputURL.getText().toString().trim().isEmpty()) {
-                        Toast.makeText(CreateNoteActivity.this, "Enter URL", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNoteActivity.this, "Vui lòng nhập đường dẫn!", Toast.LENGTH_SHORT).show();
                     } else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()) {
-                        Toast.makeText(CreateNoteActivity.this, "Enter valid URL", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNoteActivity.this, "Đường dẫn không hợp lệ!", Toast.LENGTH_SHORT).show();
                     } else {
                         textWebURL.setText(inputURL.getText().toString());
                         layoutWebURL.setVisibility(View.VISIBLE);

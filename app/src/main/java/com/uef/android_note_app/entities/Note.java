@@ -16,8 +16,8 @@ public class Note implements Serializable {
     @ColumnInfo(name = "title")
     private String title;
 
-    @ColumnInfo(name = "date_time")
-    private String dateTime;
+    @ColumnInfo(name = "created_time")
+    private String createdTime;
 
     @ColumnInfo(name = "subtitle")
     private String subtitle;
@@ -50,12 +50,12 @@ public class Note implements Serializable {
         this.title = title;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    public String getCreatedTime() {
+        return createdTime;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public void setCreatedTime(String dateTime) {
+        this.createdTime = dateTime;
     }
 
     public String getSubtitle() {
@@ -101,6 +101,6 @@ public class Note implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return title + ": " + dateTime;
+        return title + ": " + createdTime;
     }
 }
