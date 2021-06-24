@@ -97,7 +97,7 @@
                 android:textSize="@dimen/_13sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/viewSubtitleIndicator"
-                app:layout_constraintTop_toBottomOf="@id/textDateTime" />
+                app:layout_constraintTop_toBottomOf="@id/textCreatedTime" />
 
             <View
                 android:id="@+id/viewSubtitleIndicator"
@@ -197,6 +197,5 @@
     </ScrollView>
 
     <include layout="@layout/layout_miscellaneous" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
