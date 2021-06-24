@@ -72,7 +72,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     static class NoteViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitle, textSubtitle, textDateTime;
+        TextView textTitle, textSubtitle, textCreatedTime;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
 
@@ -80,7 +80,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
             textSubtitle = itemView.findViewById(R.id.textSubtitle);
-            textDateTime = itemView.findViewById(R.id.textDateTime);
+            textCreatedTime = itemView.findViewById(R.id.textCreatedTime);
             layoutNote = itemView.findViewById(R.id.layoutNote);
             imageNote = itemView.findViewById(R.id.imageNote);
         }
@@ -92,7 +92,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             } else {
                 textSubtitle.setText(note.getSubtitle());
             }
-            textDateTime.setText(note.getCreatedTime());
+            textCreatedTime.setText(note.getCreatedTime());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
             if (note.getColor() != null) {

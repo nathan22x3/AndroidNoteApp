@@ -54,8 +54,8 @@ public class Note implements Serializable {
         return createdTime;
     }
 
-    public void setCreatedTime(String dateTime) {
-        this.createdTime = dateTime;
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 
     public String getSubtitle() {

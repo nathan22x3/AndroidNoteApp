@@ -44,7 +44,7 @@
         android:textSize="@dimen/_12ssp" />
 
     <TextView
-        android:id="@+id/textDateTime"
+        android:id="@+id/textCreatedTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"

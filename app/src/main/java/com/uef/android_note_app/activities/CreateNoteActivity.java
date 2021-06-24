@@ -72,7 +72,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         inputNoteTitle = findViewById(R.id.inputNoteTitle);
         inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
         inputNoteText = findViewById(R.id.inputNote);
-        textCreatedTime = findViewById(R.id.textDateTime);
+        textCreatedTime = findViewById(R.id.textCreatedTime);
         viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
         imageNote = findViewById(R.id.imageNote);
         textWebURL = findViewById(R.id.textWebURL);
