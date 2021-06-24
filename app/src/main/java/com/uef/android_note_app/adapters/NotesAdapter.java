@@ -20,6 +20,7 @@ import com.uef.android_note_app.entities.Note;
 import com.uef.android_note_app.listeners.NotesListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -147,4 +148,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    public void GetNotesByCurrentDate(final String currentDate){
+
+        ArrayList<Note> temp = new ArrayList<>();
+        for (Note note : notesSource) {
+            if (note.getCreatedTime().contains(currentDate))
+                temp.add(note);
+            }
+            notes = temp;
+    }
+
+
+
 }
+
+

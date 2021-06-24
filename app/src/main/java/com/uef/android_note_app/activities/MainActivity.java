@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,12 +14,15 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,9 +37,15 @@ import com.uef.android_note_app.adapters.NotesAdapter;
 import com.uef.android_note_app.database.NotesDatabase;
 import com.uef.android_note_app.entities.Note;
 import com.uef.android_note_app.listeners.NotesListener;
+import com.uef.android_note_app.views.CalendarView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NotesListener {
 
@@ -48,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private RecyclerView notesRecyclerView;
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
+
+    private CalendarView calendarView ;
 
     private int noteClickedPosition = -1;
 
@@ -113,6 +125,39 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         });
 
         findViewById(R.id.imageAddWebLink).setOnClickListener(v -> showAddURLDialog());
+
+        calendarView = findViewById(R.id.calendar_view);
+
+        GridView gridView = findViewById(R.id.calendar_grid);
+
+        gridView.setOnItemClickListener((view, cell, position, id) -> {
+            Date date = (Date) view.getItemAtPosition(position);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            ((TextView) cell).setTextColor(Color.rgb(255, 204, 51));
+
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int year = calendar.get(Calendar.YEAR);
+
+            String currentdate = String.valueOf(day) +" "+ String.valueOf(month) +" "+ String.valueOf(year);
+
+
+            Date formattedDate = null;
+            try {
+                formattedDate = new SimpleDateFormat("dd M yyyy").parse(currentdate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String convertedDate = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("vi", "VN"))
+                    .format(formattedDate);
+
+            notesAdapter.GetNotesByCurrentDate(convertedDate);
+
+            notesAdapter.notifyDataSetChanged();
+            Log.d("CURRENT_DAY", convertedDate);
+
+        });
 
     }
 

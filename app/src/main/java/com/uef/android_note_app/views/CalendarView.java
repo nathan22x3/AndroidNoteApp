@@ -10,10 +10,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uef.android_note_app.R;
+import com.uef.android_note_app.activities.MainActivity;
 import com.uef.android_note_app.adapters.CalendarAdapter;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,17 +82,6 @@ public class CalendarView extends LinearLayout {
         btnToday.setOnClickListener(v -> {
             currentDate.setTime(today);
             updateCalendar();
-        });
-
-        gridView.setOnItemClickListener((view, cell, position, id) -> {
-            Date date = (Date) view.getItemAtPosition(position);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH);
-            int year = calendar.get(Calendar.YEAR) - 1900;
-            ((TextView) cell).setTextColor(Color.rgb(255, 204, 51));
-            Log.d("CURRENT_DAY", Arrays.toString(new String[]{String.valueOf(day), String.valueOf(month), String.valueOf(year)}));
         });
     }
 
