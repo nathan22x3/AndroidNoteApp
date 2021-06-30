@@ -3,6 +3,7 @@ package com.uef.android_note_app.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,6 +20,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +63,8 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private Note alreadyAvailableNote;
 
+    private Boolean  isUpdate = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         imageNote = findViewById(R.id.imageNote);
         textWebURL = findViewById(R.id.textWebURL);
         layoutWebURL = findViewById(R.id.layoutWebURL);
+
 
         textCreatedTime.setText(
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
@@ -96,6 +101,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         if (getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             alreadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
+            isUpdate = true;
             setViewOrUpdateNote();
         }
 
@@ -180,6 +186,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         if (alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
+
         }
 
         @SuppressLint("StaticFieldLeak")
@@ -202,8 +209,25 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
 
         new SaveNoteTask().execute();
+        if (isUpdate == false){
+            Toast.makeText(this, "Tạo ghi chú thành công", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Cập nhật ghi chú thành công", Toast.LENGTH_SHORT).show();
+        }
+        isUpdate = false;
+        closeKeyboard();
     }
 
+    // hide keyboard
+    private void closeKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null){
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
+    }
 
     private void initMiscellaneous() {
         final LinearLayout layoutMiscellaneous = findViewById(R.id.layoutMiscellaneous);
@@ -382,6 +406,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                     }
 
                     new DeleteNoteTask().execute();
+                    Toast.makeText(CreateNoteActivity.this, "Xóa ghi chú thành công", Toast.LENGTH_SHORT).show();
                 }
             });
 
