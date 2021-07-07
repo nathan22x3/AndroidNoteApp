@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -136,7 +138,13 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             Date date = (Date) view.getItemAtPosition(position);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            ((TextView) cell).setTextColor(Color.rgb(255, 204, 51));
+
+            
+            // custom clicked cell style
+            ((TextView) cell).setTypeface(null, Typeface.BOLD);
+            ((TextView) cell).setBackgroundColor(Color.rgb(255, 204, 51));
+            ((TextView) cell).setBackgroundResource(R.drawable.rounded_button);
+            ((TextView) cell).setTextColor(Color.rgb(51, 51, 51));
 
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH) + 1;
