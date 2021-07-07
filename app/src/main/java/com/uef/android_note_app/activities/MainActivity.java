@@ -19,6 +19,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -126,10 +127,11 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
         findViewById(R.id.imageAddWebLink).setOnClickListener(v -> showAddURLDialog());
 
+        // init for calendar view
         calendarView = findViewById(R.id.calendar_view);
 
         GridView gridView = findViewById(R.id.calendar_grid);
-
+        // set on click for items in grid view
         gridView.setOnItemClickListener((view, cell, position, id) -> {
             Date date = (Date) view.getItemAtPosition(position);
             Calendar calendar = Calendar.getInstance();
@@ -159,6 +161,26 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
         });
 
+        // set filter button
+        Button buttonFilterAll = findViewById(R.id.buttonFilterAll);
+        Button buttonFilterStudy = findViewById(R.id.buttonFilterStudy);
+        Button buttonFilterWork = findViewById(R.id.buttonFilterWork);
+
+        buttonFilterAll.setOnClickListener(v -> {
+//            Toast.makeText(this, buttonFilterAll.getHint(), Toast.LENGTH_SHORT).show();
+            notesAdapter.GetNotesByCategory(buttonFilterAll.getHint().toString());
+            notesAdapter.notifyDataSetChanged();
+        });
+
+        buttonFilterStudy.setOnClickListener(v -> {
+            notesAdapter.GetNotesByCategory(buttonFilterStudy.getHint().toString());
+            notesAdapter.notifyDataSetChanged();
+        });
+
+        buttonFilterWork.setOnClickListener(v -> {
+            notesAdapter.GetNotesByCategory(buttonFilterWork.getHint().toString());
+            notesAdapter.notifyDataSetChanged();
+        });
     }
 
     @Override

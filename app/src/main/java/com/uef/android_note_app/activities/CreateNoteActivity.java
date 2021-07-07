@@ -21,9 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uef.android_note_app.R;
+import com.uef.android_note_app.adapters.NotesAdapter;
 import com.uef.android_note_app.database.NotesDatabase;
 import com.uef.android_note_app.entities.Note;
 
@@ -43,7 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CreateNoteActivity extends AppCompatActivity {
+public class CreateNoteActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textCreatedTime;
@@ -137,9 +142,23 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }
             }
         }
+        // init for category
+
+        Spinner categorySpinner = findViewById(R.id.spinner_category_list);
+        categorySpinner.setOnItemSelectedListener(this);
 
         initMiscellaneous();
         setSubtitleIndicatorColor();
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
@@ -367,6 +386,8 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }
             });
         }
+
+
     }
 
     private void showDeleteNoteDialog() {
@@ -392,6 +413,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                         protected Void doInBackground(Void... voids) {
                             NotesDatabase.getDatabase(getApplicationContext()).noteDao()
                                     .deleteNote(alreadyAvailableNote);
+
                             return null;
                         }
 
@@ -404,9 +426,8 @@ public class CreateNoteActivity extends AppCompatActivity {
                             finish();
                         }
                     }
-
-                    new DeleteNoteTask().execute();
                     Toast.makeText(CreateNoteActivity.this, "Xóa ghi chú thành công", Toast.LENGTH_SHORT).show();
+                    new DeleteNoteTask().execute();
                 }
             });
 
@@ -528,5 +549,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         dialogAddURL.show();
 
     }
+
 
 }

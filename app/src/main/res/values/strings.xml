@@ -27,5 +27,11 @@
     <string name="friday">Thứ 6</string>
     <string name="saturday">Thứ 7</string>
     <string name="go_to_today">Quay về hôm nay</string>
+    <string name="add_category">Chọn loại ghi chú:</string>
 
+    <string-array name="category">
+        <item>Mặc định</item>
+        <item>Học Tập</item>
+        <item>Công Việc</item>
+    </string-array>
 </resources>

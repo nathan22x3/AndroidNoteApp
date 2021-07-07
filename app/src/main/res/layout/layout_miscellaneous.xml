@@ -199,6 +199,9 @@
 
     </LinearLayout>
 
+
+
+
     <LinearLayout
         android:id="@+id/layoutDeleteNote"
         android:layout_width="match_parent"

@@ -148,6 +148,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    // get notes when clicked items in calendar view
     public void GetNotesByCurrentDate(final String currentDate){
 
         ArrayList<Note> temp = new ArrayList<>();
@@ -156,6 +157,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 temp.add(note);
             }
             notes = temp;
+    }
+
+    // filter
+    public void GetNotesByCategory(final String caterory){
+        ArrayList<Note> temp = new ArrayList<>();
+        for (Note note : notesSource) {
+            if (note.getColor().contains(caterory))
+                temp.add(note);
+        }
+        notes = temp;
     }
 
 
