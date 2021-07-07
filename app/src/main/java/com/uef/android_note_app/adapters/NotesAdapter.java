@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.uef.android_note_app.R;
 import com.uef.android_note_app.entities.Note;
 import com.uef.android_note_app.listeners.NotesListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +75,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     static class NoteViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitle, textSubtitle, textCreatedTime;
+        ArrayAdapter<CharSequence> categoryAdapter;
+        TextView textTitle, textSubtitle, textCreatedTime, textCategory;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
 
@@ -84,6 +87,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             textCreatedTime = itemView.findViewById(R.id.textCreatedTime);
             layoutNote = itemView.findViewById(R.id.layoutNote);
             imageNote = itemView.findViewById(R.id.imageNote);
+            textCategory = itemView.findViewById(R.id.textCategory);
+            categoryAdapter = ArrayAdapter.createFromResource(
+                    itemView.getContext(),
+                    R.array.category,
+                    android.R.layout.simple_spinner_item
+            );
         }
 
         void setNote(Note note) {
@@ -94,6 +103,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 textSubtitle.setText(note.getSubtitle());
             }
             textCreatedTime.setText(note.getCreatedTime());
+            textCategory.setText(categoryAdapter.getItem(note.getCategory()));
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
             if (note.getColor() != null) {
@@ -163,8 +173,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void GetNotesByCategory(final String caterory){
         ArrayList<Note> temp = new ArrayList<>();
         for (Note note : notesSource) {
-            if (note.getColor().contains(caterory))
+            String noteCategory = String.valueOf(note.getCategory());
+            if (caterory.contains("#")){
                 temp.add(note);
+            }
+            else {
+                if (noteCategory.compareTo(caterory) == 0 || note.getCategory() == 0)
+                    temp.add(note);
+            }
+
         }
         notes = temp;
     }

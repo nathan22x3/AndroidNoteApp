@@ -57,9 +57,9 @@
                     android:backgroundTint="@color/colorAccent"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
-                    android:hint="#"
+                    android:hint="@string/filter_all_value"
                     android:padding="@dimen/_5sdp"
-                    android:text="Tất cả"
+                    android:text="@string/filter_all_text"
                     android:textSize="@dimen/_12sdp" />
 
                 <Button
@@ -72,9 +72,9 @@
                     android:backgroundTint="@color/colorAccent"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
-                    android:hint="#333333"
+                    android:hint="@string/filter_study_value"
                     android:padding="@dimen/_5sdp"
-                    android:text="Học tập"
+                    android:text="@string/filter_study_text"
                     android:textSize="@dimen/_12sdp" />
 
                 <Button
@@ -87,9 +87,9 @@
                     android:backgroundTint="@color/colorAccent"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
-                    android:hint="#FDBE3B"
+                    android:hint="@string/filter_work_value"
                     android:padding="@dimen/_5sdp"
-                    android:text="Công việc"
+                    android:text="@string/filter_work_text"
                     android:textSize="@dimen/_12sdp" />
             </LinearLayout>
 

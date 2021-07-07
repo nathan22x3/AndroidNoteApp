@@ -179,7 +179,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         inputNoteTitle.setText(alreadyAvailableNote.getTitle());
         inputNoteSubtitle.setText(alreadyAvailableNote.getSubtitle());
         inputNoteText.setText(alreadyAvailableNote.getNoteText());
-        textCreatedTime.setText(alreadyAvailableNote.getCreatedTime());
+        textCreatedTime.setText(new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
+                .format(new Date()));
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setSelection(alreadyAvailableNote.getCategory());
 

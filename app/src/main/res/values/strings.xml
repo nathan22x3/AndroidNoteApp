@@ -28,6 +28,12 @@
     <string name="saturday">Thứ 7</string>
     <string name="go_to_today">Quay về hôm nay</string>
     <string name="add_category">Chọn loại ghi chú:</string>
+    <string name="filter_all_value">#</string>
+    <string name="filter_all_text">Tất cả</string>
+    <string name="filter_study_value">1</string>
+    <string name="filter_study_text">Học tập</string>
+    <string name="filter_work_value">2</string>
+    <string name="filter_work_text">Công việc</string>
 
     <string-array name="category">
         <item>Mặc định</item>

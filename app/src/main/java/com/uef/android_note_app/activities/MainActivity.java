@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
 
         }
-
+        notesAdapter.searchNotes("");
         new GetNotesTask().execute();
     }
 
