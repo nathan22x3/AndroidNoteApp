@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +59,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     private TextView textWebURL;
     private LinearLayout layoutWebURL;
 
+    private Spinner categorySpinner;
+
     private String selectedNoteColor;
     private String selectedImagePath;
 
@@ -69,6 +73,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     private Note alreadyAvailableNote;
 
     private Boolean  isUpdate = false;
+
+    private ArrayAdapter<CharSequence> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,17 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         textWebURL = findViewById(R.id.textWebURL);
         layoutWebURL = findViewById(R.id.layoutWebURL);
 
+        // init for category
+
+        categorySpinner = findViewById(R.id.spinnerCategory);
+        spinnerAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.category,
+                android.R.layout.simple_spinner_item
+        );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(spinnerAdapter);
+        categorySpinner.setOnItemSelectedListener(this);
 
         textCreatedTime.setText(
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
@@ -142,10 +159,6 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
                 }
             }
         }
-        // init for category
-
-        Spinner categorySpinner = findViewById(R.id.spinner_category_list);
-        categorySpinner.setOnItemSelectedListener(this);
 
         initMiscellaneous();
         setSubtitleIndicatorColor();
@@ -154,7 +167,6 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
     }
 
     @Override
@@ -163,10 +175,13 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     }
 
     private void setViewOrUpdateNote() {
+
         inputNoteTitle.setText(alreadyAvailableNote.getTitle());
         inputNoteSubtitle.setText(alreadyAvailableNote.getSubtitle());
         inputNoteText.setText(alreadyAvailableNote.getNoteText());
         textCreatedTime.setText(alreadyAvailableNote.getCreatedTime());
+        categorySpinner.setAdapter(spinnerAdapter);
+        categorySpinner.setSelection(alreadyAvailableNote.getCategory());
 
         if (alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
@@ -198,7 +213,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         note.setCreatedTime(textCreatedTime.getText().toString());
         note.setColor(selectedNoteColor);
         note.setImagePath(selectedImagePath);
-
+        note.setCategory(categorySpinner.getSelectedItemPosition());
         if (layoutWebURL.getVisibility() == View.VISIBLE) {
             note.setWebLink(textWebURL.getText().toString());
         }

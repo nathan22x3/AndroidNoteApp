@@ -25,6 +25,9 @@ public class Note implements Serializable {
     @ColumnInfo(name = "note_text")
     private String noteText;
 
+    @ColumnInfo(name = "category")
+    private int category;
+
     @ColumnInfo(name = "image_path")
     private String imagePath;
 
@@ -72,6 +75,14 @@ public class Note implements Serializable {
 
     public void setNoteText(String noteText) {
         this.noteText = noteText;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public String getImagePath() {
