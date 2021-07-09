@@ -34,6 +34,8 @@
     <string name="filter_study_text">Học tập</string>
     <string name="filter_work_value">2</string>
     <string name="filter_work_text">Công việc</string>
+    <string name="add_alarm">Đặt thời gian báo:</string>
+    <string name="text_pick_time">Chọn thời gian</string>
 
     <string-array name="category">
         <item>Mặc định</item>

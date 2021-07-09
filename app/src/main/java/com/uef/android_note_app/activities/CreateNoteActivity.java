@@ -2,7 +2,11 @@ package com.uef.android_note_app.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,32 +29,41 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uef.android_note_app.R;
 import com.uef.android_note_app.adapters.NotesAdapter;
 import com.uef.android_note_app.database.NotesDatabase;
 import com.uef.android_note_app.entities.Note;
+import com.uef.android_note_app.notification.AlertReceiver;
+import com.uef.android_note_app.notification.NotificationHelper;
+import com.uef.android_note_app.views.TimePickerFragment;
 
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class CreateNoteActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CreateNoteActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,TimePickerDialog.OnTimeSetListener {
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textCreatedTime;
@@ -66,6 +79,9 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final int REQUEST_CODE_START_ALARM = 3;
+    private static final String EXTRA_NOTE_TITLE = "title";
+    private static final String EXTRA_MESSAGE = "message";
 
     private AlertDialog dialogAddURL;
     private AlertDialog dialogDeleteNote;
@@ -75,6 +91,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     private Boolean  isUpdate = false;
 
     private ArrayAdapter<CharSequence> spinnerAdapter;
+    TextView textAlarm;
+    Calendar calendarAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +122,28 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setOnItemSelectedListener(this);
+
+
+        // init for alarm
+        textAlarm = findViewById(R.id.textViewAlarm);
+        Button btnSetAlarm = findViewById(R.id.buttonSetAlarm);
+        btnSetAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(),"time picker");
+            }
+        });
+
+        ImageView btnCancelAlarm = findViewById(R.id.buttonCancelAlarm);
+        btnCancelAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelAlarm();
+            }
+        });
+
+        // -- end of init for alarm
 
         textCreatedTime.setText(
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
@@ -164,7 +204,58 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         setSubtitleIndicatorColor();
 
     }
+    // for alarm (time picker)
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        calendarAlarm = Calendar.getInstance();
+        calendarAlarm.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        calendarAlarm.set(Calendar.MINUTE,minute);
+        calendarAlarm.set(Calendar.SECOND,0);
 
+        updateTimeText(calendarAlarm);
+
+
+    }
+    private void updateTimeText(Calendar c){
+        String timeText = "Thời gian báo: ";
+        timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+
+        textAlarm.setText(timeText);
+    }
+
+    private void startAlarm(Calendar c, String title, String message){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra(EXTRA_NOTE_TITLE,title);
+        intent.putExtra(EXTRA_MESSAGE,message);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
+
+        if(c.before(Calendar.getInstance())){
+            c.add(Calendar.DATE,1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelAlarm(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
+
+        alarmManager.cancel(pendingIntent);
+        textAlarm.setText(R.string.add_alarm);
+    }
+    public String formatTimeNumber(int number){
+        if(number < 10){
+            return "0"+number;
+
+        }
+        return String.valueOf(number);
+    }
+
+
+    // -- end of alarm methods
+    // for add category (spinner)
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     }
@@ -173,7 +264,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
+    // -- end of add category methods
     private void setViewOrUpdateNote() {
 
         inputNoteTitle.setText(alreadyAvailableNote.getTitle());
@@ -252,6 +343,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
             Toast.makeText(this, "Cập nhật ghi chú thành công", Toast.LENGTH_SHORT).show();
         }
         isUpdate = false;
+        startAlarm(calendarAlarm,inputNoteTitle.getText().toString(),inputNoteText.getText().toString());
         closeKeyboard();
     }
 
