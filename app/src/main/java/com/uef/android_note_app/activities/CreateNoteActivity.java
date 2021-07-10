@@ -80,6 +80,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final int REQUEST_CODE_START_ALARM = 3;
+
+    private static final String EXTRA_NOTE_ID = "id";
     private static final String EXTRA_NOTE_TITLE = "title";
     private static final String EXTRA_MESSAGE = "message";
 
@@ -223,9 +225,10 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         textAlarm.setText(timeText);
     }
 
-    private void startAlarm(Calendar c, String title, String message){
+    private void startAlarm(Calendar c, String title, String message,String id){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra(EXTRA_NOTE_ID,id);
         intent.putExtra(EXTRA_NOTE_TITLE,title);
         intent.putExtra(EXTRA_MESSAGE,message);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
@@ -274,6 +277,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
                 .format(new Date()));
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setSelection(alreadyAvailableNote.getCategory());
+        textAlarm.setText(alreadyAvailableNote.getAlertTime());
 
         if (alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
@@ -306,14 +310,17 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         note.setColor(selectedNoteColor);
         note.setImagePath(selectedImagePath);
         note.setCategory(categorySpinner.getSelectedItemPosition());
+        note.setAlertTime(textAlarm.getText().toString());
+
         if (layoutWebURL.getVisibility() == View.VISIBLE) {
             note.setWebLink(textWebURL.getText().toString());
         }
 
         if (alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
-
         }
+        startAlarm(calendarAlarm,note.getTitle(),note.getNoteText(),String.valueOf(note.getId()));
+        calendarAlarm = null;
 
         @SuppressLint("StaticFieldLeak")
         class SaveNoteTask extends AsyncTask<Void, Void, Void> {
@@ -334,16 +341,18 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
 
         }
 
+
+
         new SaveNoteTask().execute();
         if (isUpdate == false){
-            Toast.makeText(this, "Tạo ghi chú thành công", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tạo ghi chú thành công"  , Toast.LENGTH_SHORT).show();
         }
         else
         {
             Toast.makeText(this, "Cập nhật ghi chú thành công", Toast.LENGTH_SHORT).show();
         }
         isUpdate = false;
-        startAlarm(calendarAlarm,inputNoteTitle.getText().toString(),inputNoteText.getText().toString());
+
         closeKeyboard();
     }
 

@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 @Entity(tableName = "notes")
 public class Note implements Serializable {
@@ -18,6 +19,9 @@ public class Note implements Serializable {
 
     @ColumnInfo(name = "created_time")
     private String createdTime;
+//
+    @ColumnInfo(name = "alert_time")
+    private String alertTime;
 
     @ColumnInfo(name = "subtitle")
     private String subtitle;
@@ -59,6 +63,14 @@ public class Note implements Serializable {
 
     public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getAlertTime() {
+        return alertTime;
+    }
+
+    public void setAlertTime(String alertTime) {
+        this.alertTime = alertTime;
     }
 
     public String getSubtitle() {

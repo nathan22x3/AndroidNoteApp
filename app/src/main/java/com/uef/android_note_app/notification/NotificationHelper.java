@@ -13,25 +13,29 @@ import androidx.core.app.NotificationCompat;
 import com.uef.android_note_app.R;
 
 public class NotificationHelper extends ContextWrapper {
-    public static final String channelID = "channelID";
-    public static final String channelName = "Channel Name";
+
 
     private NotificationManager mMananger;
 
-    public NotificationHelper(Context base) {
+    public NotificationHelper(Context base, String channelID, String channelName) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            createChannels();
+            createChannels(channelID,channelName);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    public void createChannels(){
-        NotificationChannel channel = new NotificationChannel(channelID,channelName, NotificationManager.IMPORTANCE_DEFAULT);
+    public void createChannels(String channelID,String channelName){
+        NotificationChannel channel = new NotificationChannel(
+                channelID,
+                channelName,
+                NotificationManager.IMPORTANCE_DEFAULT);
         channel.enableLights(true);
         channel.enableVibration(true);
         channel.setLightColor(R.color.colorAccent);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        channel.setDescription("this is chanel" + channelID);
+
 
         getManager().createNotificationChannel(channel);
     }
@@ -44,10 +48,13 @@ public class NotificationHelper extends ContextWrapper {
         return mMananger;
     }
 
-    public NotificationCompat.Builder getChannelNotification(String title, String message){
+    public NotificationCompat.Builder getChannelNotification(String channelID , String title, String message){
         return new NotificationCompat.Builder(getApplicationContext(),channelID)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.ic_notification);
+                .setSmallIcon(R.drawable.ic_notification)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM);
+
     }
 }
