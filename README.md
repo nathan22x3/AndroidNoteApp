@@ -3,13 +3,11 @@
 
 <div align="center">
   <img src="./assets/logo.png" width="90" style="border-radius:15px">
-  <h2><b>Note App</b></h2>
+  <h3><b>Note App</b></h3>
   <p>Ứng dụng quản lý lịch cá nhân</p>
   <img src="https://img.shields.io/badge/Java-007396?logo=java&logoColor=fff&style=for-the-badge" style="border-radius:4px">
   <img src="https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=fff&style=for-the-badge" style="border-radius:4px">
 </div>
-
----
 
 ## **Mục lục**
 
