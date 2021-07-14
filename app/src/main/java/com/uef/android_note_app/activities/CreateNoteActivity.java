@@ -98,6 +98,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     TextView textAlarm;
     Calendar calendarAlarm;
 
+    private int startAlarmValue;
+
     private String selectedTimeText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,12 +235,13 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     }
 
     private void startAlarm(Calendar c, String title, String message,String id){
+        startAlarmValue = Integer.parseInt(id);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         intent.putExtra(EXTRA_NOTE_ID,id);
         intent.putExtra(EXTRA_NOTE_TITLE,title);
         intent.putExtra(EXTRA_MESSAGE,message);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, startAlarmValue, intent,0);
 
         if(c.before(Calendar.getInstance())){
             c.add(Calendar.DATE,1);
@@ -251,7 +254,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         selectedTimeText = "";
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, startAlarmValue, intent,0);
 
         alarmManager.cancel(pendingIntent);
         textAlarm.setText(R.string.add_alarm);
@@ -337,8 +340,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
             note.setId(alreadyAvailableNote.getId());
         }
         if (selectedTimeText != ""){
-//            startAlarm(calendarAlarm,note.getTitle(),note.getNoteText(),String.valueOf(note.getId()));
-            startAlarm(calendarAlarm,inputNoteTitle.getText().toString(),inputNoteText.getText().toString(),String.valueOf(note.getId()));
+            startAlarm(calendarAlarm,note.getTitle(),note.getNoteText(),String.valueOf(note.getId()));
+//            startAlarm(calendarAlarm,inputNoteTitle.getText().toString(),inputNoteText.getText().toString(),String.valueOf(note.getId()));
         }
 
         calendarAlarm = null;
