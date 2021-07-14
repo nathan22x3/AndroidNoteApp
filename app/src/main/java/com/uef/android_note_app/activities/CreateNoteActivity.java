@@ -18,6 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -41,6 +42,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -96,6 +98,7 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     TextView textAlarm;
     Calendar calendarAlarm;
 
+    private String selectedTimeText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +130,9 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
 
 
         // init for alarm
+
+
+        selectedTimeText = "";
         textAlarm = findViewById(R.id.textViewAlarm);
         Button btnSetAlarm = findViewById(R.id.buttonSetAlarm);
         btnSetAlarm.setOnClickListener(new View.OnClickListener() {
@@ -214,15 +220,16 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         calendarAlarm.set(Calendar.MINUTE,minute);
         calendarAlarm.set(Calendar.SECOND,0);
 
+
         updateTimeText(calendarAlarm);
 
 
     }
     private void updateTimeText(Calendar c){
         String timeText = "Thời gian báo: ";
-        timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        selectedTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        textAlarm.setText(timeText+selectedTimeText);
 
-        textAlarm.setText(timeText);
     }
 
     private void startAlarm(Calendar c, String title, String message,String id){
@@ -241,12 +248,15 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
     }
 
     private void cancelAlarm(){
+        selectedTimeText = "";
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_START_ALARM, intent,0);
 
         alarmManager.cancel(pendingIntent);
         textAlarm.setText(R.string.add_alarm);
+
+
     }
     public String formatTimeNumber(int number){
         if(number < 10){
@@ -277,7 +287,13 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
                 .format(new Date()));
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setSelection(alreadyAvailableNote.getCategory());
-        textAlarm.setText(alreadyAvailableNote.getAlertTime());
+        if (alreadyAvailableNote.getAlertTime()!=""){
+            textAlarm.setText("Thời gian báo: "+alreadyAvailableNote.getAlertTime());
+        }
+        else {
+            textAlarm.setText(R.string.add_alarm);
+
+        }
 
         if (alreadyAvailableNote.getImagePath() != null && !alreadyAvailableNote.getImagePath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableNote.getImagePath()));
@@ -310,7 +326,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         note.setColor(selectedNoteColor);
         note.setImagePath(selectedImagePath);
         note.setCategory(categorySpinner.getSelectedItemPosition());
-        note.setAlertTime(textAlarm.getText().toString());
+        note.setAlertTime(selectedTimeText);
+
 
         if (layoutWebURL.getVisibility() == View.VISIBLE) {
             note.setWebLink(textWebURL.getText().toString());
@@ -319,7 +336,11 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         if (alreadyAvailableNote != null) {
             note.setId(alreadyAvailableNote.getId());
         }
-        startAlarm(calendarAlarm,note.getTitle(),note.getNoteText(),String.valueOf(note.getId()));
+        if (selectedTimeText != ""){
+//            startAlarm(calendarAlarm,note.getTitle(),note.getNoteText(),String.valueOf(note.getId()));
+            startAlarm(calendarAlarm,inputNoteTitle.getText().toString(),inputNoteText.getText().toString(),String.valueOf(note.getId()));
+        }
+
         calendarAlarm = null;
 
         @SuppressLint("StaticFieldLeak")
